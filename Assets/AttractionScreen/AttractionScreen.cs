@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -36,7 +37,33 @@ namespace Zhdk.Gamelab
         /// <returns>If there is any input taken that will influence the attraction screen</returns>
         private bool GetAnyInput()
         {
-            return Input.anyKey || Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
+            var keyboard = Keyboard.current;
+            var mouse = Mouse.current;
+            var gamepad = Gamepad.current;
+
+            if (keyboard != null && keyboard.anyKey.isPressed)
+            {
+                return true;
+            }
+
+            if (mouse != null && (mouse.delta.ReadValue() != Vector2.zero ||
+                mouse.leftButton.isPressed || mouse.rightButton.isPressed || mouse.middleButton.isPressed))
+            {
+                return true;
+            }
+
+            if (gamepad != null)
+            {
+                foreach (var control in gamepad.allControls)
+                {
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl button && button.isPressed)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private void Awake()
