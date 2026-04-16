@@ -25,6 +25,7 @@ hooks/
 *.user
 *.unityproj
 *.booproj
+.vsconfig
 
 # ============ #
 # OS generated #
